@@ -1,6 +1,7 @@
 import streamlit as st
 import re
 
+from src.llm import generate_answer
 from src.document_loader import load_document
 from src.preprocessing import preprocess_text
 from src.keyword_search import search_keyword
@@ -539,3 +540,90 @@ if documents:
                     "No relevant documents found."
                 )
 
+# ==================================================
+# PART 6 — BASIC LLM QUESTION ANSWERING
+# ==================================================
+
+if documents:
+
+    st.header(
+        "🤖 Part 5 — LLM Question Answering"
+    )
+
+    question = st.text_input(
+        "Ask a question about your documents",
+        placeholder="Example: What is artificial intelligence?"
+    )
+
+    if st.button("Ask Question"):
+
+        if not question.strip():
+
+            st.warning(
+                "Please enter a question."
+            )
+
+        else:
+
+            with st.spinner(
+                "Searching relevant documents..."
+            ):
+
+                document_embeddings = (
+                    generate_document_embeddings(
+                        documents
+                    )
+                )
+
+                search_results = semantic_search(
+                    question,
+                    document_embeddings,
+                    top_k=3
+                )
+
+            if search_results:
+
+                # Take top 3 documents as context
+                context = "\n\n".join(
+                    [
+                        result["text"]
+                        for result in search_results
+                    ]
+                )
+
+                with st.spinner(
+                    "Generating answer..."
+                ):
+
+                    answer = generate_answer(
+                        question,
+                        context
+                    )
+
+                st.subheader(
+                    "🤖 Generated Answer"
+                )
+
+                st.write(answer)
+
+                st.subheader(
+                    "📚 Relevant Documents"
+                )
+
+                for result in search_results:
+
+                    similarity = (
+                        result["similarity"] * 100
+                    )
+
+                    st.write(
+                        f"📄 {result['name']} "
+                        f"— Similarity: "
+                        f"{similarity:.2f}%"
+                    )
+
+            else:
+
+                st.warning(
+                    "No relevant documents found."
+                )
