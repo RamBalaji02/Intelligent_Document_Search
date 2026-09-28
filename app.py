@@ -1,12 +1,19 @@
 import streamlit as st
 import re
 
+<<<<<<< HEAD
 from src.llm import generate_answer
+=======
+>>>>>>> 9e1028108555e57ec26c8f069a9f82063b18e4f7
 from src.document_loader import load_document
 from src.preprocessing import preprocess_text
 from src.keyword_search import search_keyword
 from src.embeddings import generate_document_embeddings
 from src.semantic_search import semantic_search
+<<<<<<< HEAD
+=======
+from src.llm import generate_answer
+>>>>>>> 9e1028108555e57ec26c8f069a9f82063b18e4f7
 
 
 # ==================================================
@@ -540,13 +547,20 @@ if documents:
                     "No relevant documents found."
                 )
 
+<<<<<<< HEAD
 # ==================================================
 # PART 6 — BASIC LLM QUESTION ANSWERING
+=======
+
+# ==================================================
+# ASK THE DOCUMENTS
+>>>>>>> 9e1028108555e57ec26c8f069a9f82063b18e4f7
 # ==================================================
 
 if documents:
 
     st.header(
+<<<<<<< HEAD
         "🤖 Part 5 — LLM Question Answering"
     )
 
@@ -556,6 +570,25 @@ if documents:
     )
 
     if st.button("Ask Question"):
+=======
+        "🤖 Part 5 — Ask the Documents"
+    )
+
+
+    question = st.text_input(
+
+        "Ask a question",
+
+        placeholder=
+            "Example: What is machine learning?"
+
+    )
+
+
+    if st.button(
+        "Ask Documents"
+    ):
+>>>>>>> 9e1028108555e57ec26c8f069a9f82063b18e4f7
 
         if not question.strip():
 
@@ -566,7 +599,11 @@ if documents:
         else:
 
             with st.spinner(
+<<<<<<< HEAD
                 "Searching relevant documents..."
+=======
+                "Searching documents..."
+>>>>>>> 9e1028108555e57ec26c8f069a9f82063b18e4f7
             ):
 
                 document_embeddings = (
@@ -575,6 +612,7 @@ if documents:
                     )
                 )
 
+<<<<<<< HEAD
                 search_results = semantic_search(
                     question,
                     document_embeddings,
@@ -591,11 +629,67 @@ if documents:
                     ]
                 )
 
+=======
+
+                retrieved_documents = (
+                    semantic_search(
+
+                        question,
+
+                        document_embeddings,
+
+                        top_k=3
+
+                    )
+                )
+
+
+            if retrieved_documents:
+
+                st.subheader(
+                    "📚 Retrieved Documents"
+                )
+
+
+                for index, result in enumerate(
+
+                    retrieved_documents,
+
+                    start=1
+
+                ):
+
+                    similarity = (
+
+                        result["similarity"]
+                        * 100
+
+                    )
+
+
+                    st.write(
+
+                        f"**{index}. "
+                        f"{result['name']}**"
+
+                    )
+
+
+                    st.write(
+
+                        f"Similarity: "
+                        f"{similarity:.2f}%"
+
+                    )
+
+
+>>>>>>> 9e1028108555e57ec26c8f069a9f82063b18e4f7
                 with st.spinner(
                     "Generating answer..."
                 ):
 
                     answer = generate_answer(
+<<<<<<< HEAD
                         question,
                         context
                     )
@@ -621,6 +715,25 @@ if documents:
                         f"— Similarity: "
                         f"{similarity:.2f}%"
                     )
+=======
+
+                        question,
+
+                        retrieved_documents
+
+                    )
+
+
+                st.subheader(
+                    "💡 Answer"
+                )
+
+
+                st.write(
+                    answer
+                )
+
+>>>>>>> 9e1028108555e57ec26c8f069a9f82063b18e4f7
 
             else:
 
